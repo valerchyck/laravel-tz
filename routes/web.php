@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Manufacturer@index');
+
+Route::resource('/manufacturer', 'Manufacturer');
+Route::resource('/beer', 'Beer');
+Route::resource('/beer-type', 'BeerType');
