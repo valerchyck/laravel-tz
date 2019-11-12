@@ -25,11 +25,15 @@
 
                     <div class="form-group">
                         <label for="name">Manufacturer:</label>
-                        <select name="id_manufacturer" class="form-control">
-                            @foreach($manufacturers as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
+                        @if (count($manufacturers) == 0)
+                            <div>Please create some <a href="{{ route('manufacturer.create') }}">manufacturers</a></div>
+                        @else
+                            <select name="id_manufacturer" class="form-control">
+                                @foreach($manufacturers as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
 
                     <div class="form-group">
@@ -39,6 +43,10 @@
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea name="description" class="form-control"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Add beer</button>

@@ -20,9 +20,13 @@ class Beer extends Controller
     {
         $search = \Request::get('search');
         $data = \App\Models\Beer::search($search);
+        $types = \App\Models\BeerType::all();
+        $manufacturers = \App\Models\Manufacturer::all();
 
         return view("{$this->getClassName()}.index", [
             'data' => $data,
+            'types' => $types,
+            'manufacturers' => $manufacturers,
         ]);
     }
 
@@ -58,6 +62,9 @@ class Beer extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'id_manufacturer' => 'required',
+            'id_type' => 'required',
+            'description' => 'required',
         ]);
 
         return $this->storeBase($request);

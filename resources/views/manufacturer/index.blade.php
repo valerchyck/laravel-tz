@@ -33,7 +33,11 @@
                         </td>
                     </tr>
                     @if (count($data) == 0)
-                        <h2 class="display-5 text-center">Not Data</h2>
+                        <tr>
+                            <td colspan="2">
+                                <h2 class="display-5 text-center">Not Data</h2>
+                            </td>
+                        </tr>
                     @else
                         @foreach($data as $item)
                             <tr>

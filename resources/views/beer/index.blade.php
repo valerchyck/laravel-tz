@@ -23,8 +23,29 @@
                     <tr>
                         <td><input onchange="applyFilter('beer-form')" value="{{ Request::get('search')['id'] }}" class="form-control" type="text" name="search[id]"></td>
                         <td><input onchange="applyFilter('beer-form')" value="{{ Request::get('search')['name'] }}" class="form-control" type="text" name="search[name]"></td>
-                        <td><input onchange="applyFilter('beer-form')" value="{{ Request::get('search')['id_manufacturer'] }}" class="form-control" type="text" name="search[id_manufacturer]"></td>
-                        <td><input onchange="applyFilter('beer-form')" value="{{ Request::get('search')['id_type'] }}" class="form-control" type="text" name="search[id_type]"></td>
+                        <td>
+                            <select onchange="applyFilter('beer-form')" class="form-control" type="text" name="search[id_manufacturer]">
+                                <option value=""></option>
+                                @foreach($manufacturers as $manufacturer)
+                                    <option
+                                            @if ($manufacturer->id == Request::get('search')['id_manufacturer'])
+                                            selected
+                                            @endif
+                                            value="{{ $manufacturer->id }}">{{ $manufacturer->name }}</option>
+                                @endforeach
+                            </select>
+                        <td>
+                            <select onchange="applyFilter('beer-form')" class="form-control" type="text" name="search[id_type]">
+                                <option value=""></option>
+                                @foreach($types as $type)
+                                    <option
+                                            @if ($type->id == Request::get('search')['id_type'])
+                                            selected
+                                            @endif
+                                            value="{{ $type->id }}">{{ $type->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
                     </tr>
                     @if (count($data) == 0)
                         <tr>

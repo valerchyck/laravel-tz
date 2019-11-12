@@ -51,6 +51,11 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="description">Beer description:</label>
+                    <textarea name="description" class="form-control">{{ $model->description }}</textarea>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
         </div>

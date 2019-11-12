@@ -17,24 +17,23 @@ class Beer extends Model
     {
         $query = self::query();
 
-        if (isset($params['id'])) {
-            $query->orWhere('id', '=', $params['id']);
-        }
-
-        if (isset($params['name'])) {
-            $query->orWhere('name', 'like', "%{$params['name']}%");
-        }
-
-        if (isset($params['manufacturer'])) {
-            $query->orWhereHas('manufacturer', function ($query) use ($params) {
-                $query->where('name', 'like', "%{$params['manufacturer']}%");
-            });
-        }
-
-        if (isset($params['type'])) {
-            $query->orWhereHas('type', function ($query) use ($params) {
-                $query->where('name', 'like', "%{$params['type']}%");
-            });
+        if ($params) {
+            foreach ($params as $field => $param) {
+                if ($param) {
+                    if ($field == 'id_type') {
+                        $query->whereHas('type', function ($query) use ($param) {
+                            $query->where('id_type', '=', $param);
+                        });
+                    } else if ($field == 'manufacturer') {
+                        $query->orWhereHas('beerTypes', function ($query) use ($param) {
+                            $query->where('id_manufacturer', '=', $param);
+                        });
+                    }
+                    else {
+                        $query->where($field, 'like', "%$param%");
+                    }
+                }
+            }
         }
 
         return $query->get();

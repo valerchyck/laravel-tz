@@ -22,11 +22,7 @@ class Manufacturer extends Model
                             $query->where('id_type', '=', $param);
                         });
                     } else {
-                        if (is_int($params)) {
-                            $query->orWhere($field, '=', $param);
-                        } else {
-                            $query->orWhere($field, 'like', "%$param%");
-                        }
+                        $query->orWhere($field, 'like', "%$param%");
                     }
                 }
             }
