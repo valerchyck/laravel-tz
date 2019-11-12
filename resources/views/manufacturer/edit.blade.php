@@ -24,7 +24,26 @@
                     <label for="name">Name:</label>
                     <input type="text" class="form-control" name="name" value={{ $manufacturer->name }} />
                 </div>
-                <button type="submit" class="btn btn-primary">Update</button>
+
+                <label>Beer types:</label>
+                @if (count($types) == 0)
+                    <div>Please create some <a href="{{ route('beer-type.create') }}">types</a></div>
+                @else
+                    <div class="form-group">
+                        @foreach($types as $type)
+                            <label>
+                                <input type="checkbox" name="beer_types[]"
+                                       @if (in_array($type->id, $selectedTypes))
+                                           checked
+                                       @endif
+                                       value="{{ $type->id }}">
+                                {{ $type->name }}
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save manufacturer</button>
+                @endif
             </form>
         </div>
     </div>

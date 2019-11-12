@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ManufacturerTypes;
 use Illuminate\Http\Request;
 use \App\Models\Manufacturer as ManufacturerModel;
 
@@ -14,9 +15,11 @@ class Manufacturer extends Controller
      */
     public function index()
     {
-        $data = ManufacturerModel::all();
+        $search = \Request::get('search');
+        $data = ManufacturerModel::search($search);
+        $types = \App\Models\BeerType::all();
 
-        return view('manufacturer.index', compact('data'));
+        return view('manufacturer.index', compact('data', 'types'));
     }
 
     /**
@@ -26,7 +29,9 @@ class Manufacturer extends Controller
      */
     public function create()
     {
-        return view('manufacturer.create');
+        $types = \App\Models\BeerType::all();
+
+        return view('manufacturer.create', compact('types'));
     }
 
     /**
@@ -38,13 +43,23 @@ class Manufacturer extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required',
+            'name' => 'required',
+            'beer_types' => 'required',
         ]);
 
         $manufacturer = new ManufacturerModel([
             'name' => $request->get('name'),
         ]);
         $manufacturer->save();
+
+        foreach ($request->get('beer_types') as $idType) {
+            $manufacturer->beerTypes()->saveMany([
+                new ManufacturerTypes([
+                    'id_manufacturer' => $manufacturer->id,
+                    'id_type' => $idType,
+                ]),
+            ]);
+        }
 
         return redirect('/manufacturer')->with('success', 'Manufacturer saved!');
     }
@@ -58,7 +73,12 @@ class Manufacturer extends Controller
     public function edit($id)
     {
         $manufacturer = ManufacturerModel::find($id);
-        return view('manufacturer.edit', compact('manufacturer'));
+        $types = \App\Models\BeerType::all();
+        $selectedTypes = array_map(function($item) {
+            return $item['id_type'];
+        }, $manufacturer->beerTypes()->get('id_type')->toArray());
+
+        return view('manufacturer.edit', compact('manufacturer', 'types', 'selectedTypes'));
     }
 
     /**
@@ -71,12 +91,23 @@ class Manufacturer extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'=>'required',
+            'name' => 'required',
+            'beer_types' => 'required',
         ]);
 
         $manufacturer = ManufacturerModel::find($id);
         $manufacturer->name =  $request->get('name');
         $manufacturer->save();
+
+        ManufacturerTypes::query()->where('id_manufacturer', [$manufacturer->id])->delete();
+        foreach ($request->get('beer_types') as $idType) {
+            $manufacturer->beerTypes()->saveMany([
+                new ManufacturerTypes([
+                    'id_manufacturer' => $manufacturer->id,
+                    'id_type' => $idType,
+                ]),
+            ]);
+        }
 
         return redirect('/manufacturer')->with('success', 'Manufacturer updated!');
     }

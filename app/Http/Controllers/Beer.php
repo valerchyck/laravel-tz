@@ -16,6 +16,16 @@ class Beer extends Controller
         return \App\Models\Beer::class;
     }
 
+    public function index()
+    {
+        $search = \Request::get('search');
+        $data = \App\Models\Beer::search($search);
+
+        return view("{$this->getClassName()}.index", [
+            'data' => $data,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

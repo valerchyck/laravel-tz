@@ -18,9 +18,10 @@ class CreateBeer extends Migration
             $table->bigInteger('id_manufacturer')->unsigned();
             $table->bigInteger('id_type')->unsigned();
             $table->string('name');
+            $table->text('description');
             $table->timestamps();
-            $table->foreign('id_manufacturer')->references('id')->on('manufacturer')->onDelete('cascade');
-            $table->foreign('id_type')->references('id')->on('beer_type')->onDelete('cascade');
+            $table->foreign('id_manufacturer')->references('id')->on('manufacturers')->onDelete('cascade');
+            $table->foreign('id_type')->references('id')->on('beer_types')->onDelete('cascade');
         });
     }
 
