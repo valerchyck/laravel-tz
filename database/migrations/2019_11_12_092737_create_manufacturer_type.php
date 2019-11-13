@@ -15,10 +15,12 @@ class CreateManufacturerType extends Migration
     {
         Schema::create('manufacturer_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('id_manufacturer');
-            $table->bigInteger('id_type');
+            $table->bigInteger('id_manufacturer')->unsigned();
+            $table->bigInteger('id_type')->unsigned();
             $table->unique(['id_manufacturer', 'id_type']);
             $table->timestamps();
+            $table->foreign('id_manufacturer')->references('id')->on('manufacturers')->onDelete('cascade');
+            $table->foreign('id_type')->references('id')->on('beer_types')->onDelete('cascade');
         });
     }
 
